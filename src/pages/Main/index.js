@@ -12,6 +12,23 @@ export default class Main extends Component {
     loading: false,
   };
 
+  // Carregar os dados do localStorage
+  componentDidMount() {
+    const repositories = localStorage.getItem('repositories');
+    if (repositories) {
+      this.setState({ repositories: JSON.parse(repositories) });
+    }
+  }
+
+  // Salvar os dados do LocalStorage
+  componentDidUpdate(_, prevState) {
+    const { repositories } = this.state;
+
+    if (prevState.repositories !== repositories) {
+      localStorage.setItem('repositories', JSON.stringify(repositories));
+    }
+  }
+
   handleInputChange = e => {
     this.setState({ newRepo: e.target.value });
   };
@@ -35,7 +52,7 @@ export default class Main extends Component {
   };
 
   render() {
-    const { newRepo,repositories, loading } = this.state;
+    const { newRepo, repositories, loading } = this.state;
     return (
       <Container>
         <h1>
@@ -59,7 +76,7 @@ export default class Main extends Component {
           </SubmitButton>
         </Form>
         <List>
-          {repositories.map(repository=>(
+          {repositories.map(repository => (
             <li key={repository.name}>
               <span>{repository.name}</span>
               <a href="''">Deltalhes</a>
